@@ -1,6 +1,4 @@
-# ==========================================================
-# IMPORTS
-# ==========================================================
+
 import os
 import warnings
 import numpy as np
@@ -30,11 +28,9 @@ warnings.filterwarnings("ignore")
 ARQUIVO_RELATORIO = "relatorio_gerado.md"
 PASTA_GRAFICOS = "graficos"
 
-# Cria a pasta de graficos se nao existir
 if not os.path.exists(PASTA_GRAFICOS):
     os.makedirs(PASTA_GRAFICOS)
 
-# Limpa/Cria o arquivo de relatorio no inicio da execucao
 with open(ARQUIVO_RELATORIO, "w", encoding="utf-8") as f:
     f.write("# Relatorio de Execucao - Pipeline de Machine Learning\n\n")
 
@@ -48,7 +44,7 @@ def salvar_grafico(nome_arquivo):
     """Salva o grafico atual como PNG e insere no relatorio."""
     caminho = f"{PASTA_GRAFICOS}/{nome_arquivo}.png"
     plt.savefig(caminho, bbox_inches="tight")
-    plt.close() # Fecha a figura para nao travar o terminal
+    plt.close() 
     
     # Insere a sintaxe de imagem do Markdown no relatorio
     with open(ARQUIVO_RELATORIO, "a", encoding="utf-8") as f:
@@ -447,16 +443,37 @@ def relatorio_final(modelos, dados):
     titulo("Relatorio Final - Arvore")
     gerar_classification_report(modelos["melhor_arvore"], dados)
 
+    matriz_knn, nome_knn = _matriz_de(modelos["melhor_knn"], dados)
+    matriz_arvore, nome_arvore = _matriz_de(modelos["melhor_arvore"], dados)
+
     gerar_matrizes_confusao(modelos["melhor_knn"], modelos["melhor_arvore"], dados)
+
+    # matriz[i][j] = real i, predito j -> [1][0] = Falso Negativo, [0][1] = Falso Positivo
+    fn_knn, fp_knn = matriz_knn[1][0], matriz_knn[0][1]
+    fn_arvore, fp_arvore = matriz_arvore[1][0], matriz_arvore[0][1]
+
+    pred_knn = modelos["melhor_knn"].predict(dados["X_test_knn"])
+    pred_arvore = modelos["melhor_arvore"].predict(dados["X_test_tree"])
+    recall_knn = recall_score(dados["y_test"], pred_knn)
+    recall_arvore = recall_score(dados["y_test"], pred_arvore)
+
+    modelo_recomendado = nome_knn if recall_knn >= recall_arvore else nome_arvore
+    recall_recomendado = max(recall_knn, recall_arvore)
 
     titulo("Veredito de Negocios")
     texto_veredito = (
         "No contexto de Risco de Credito, os erros possuem pesos financeiros drasticamente diferentes.\n\n"
         "- **Falso Positivo:** Classificar um bom pagador como risco faz o banco perder a margem de juros da operacao.\n"
         "- **Falso Negativo:** Classificar um mau pagador como confiavel resulta na perda total do montante emprestado.\n\n"
+        f"No teste, o **{nome_knn}** gerou **{fn_knn} Falsos Negativos** e **{fp_knn} Falsos Positivos** "
+        f"(Recall classe 1 = {recall_knn:.2f}).\n\n"
+        f"A **{nome_arvore}** gerou **{fn_arvore} Falsos Negativos** e **{fp_arvore} Falsos Positivos** "
+        f"(Recall classe 1 = {recall_arvore:.2f}).\n\n"
         "Portanto, o foco de negocios deve ser minimizar os Falsos Negativos, ou seja, maximizar a metrica **RECALL da classe 1** (Inadimplentes).\n\n"
-        "Com base nas matrizes de confusao geradas, recomenda-se colocar em producao o modelo que obteve o maior Recall "
-        "para a classe 1, pois e a estrategia mais segura para proteger o patrimonio da instituicao financeira."
+        f"Com base nesses numeros, recomenda-se colocar em producao o modelo **{modelo_recomendado}**, "
+        f"que apresentou o maior Recall para a classe 1 ({recall_recomendado:.2f}), "
+        "ainda que isso possa custar uma leve queda na precisao geral, pois e a estrategia mais segura "
+        "para proteger o patrimonio da instituicao financeira."
     )
     registrar(texto_veredito)
     sucesso("Relatorio gerado com sucesso! Verifique o arquivo 'relatorio_gerado.md'.")

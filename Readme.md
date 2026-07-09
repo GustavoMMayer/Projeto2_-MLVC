@@ -83,14 +83,16 @@ Projeto_ML_Credito/
 
 │
 ├── data/
-│      credit_risk.csv
+│      credit_risk_dataset.csv
 │
-├── imagens/
-│      histogramas
-│      boxplots
-│      heatmap
-│      matrizes de confusão
+├── graficos/
+│      01_histogramas.png
+│      02_boxplots.png
+│      03_target_distribuicao.png
+│      04_mapa_correlacao.png
+│      05_matrizes_confusao.png
 │
+├── relatorio_gerado.md   <- relatorio final, gerado automaticamente a cada execucao
 ├── main.py
 ├── functions.py
 ├── requirements.txt
@@ -272,28 +274,48 @@ python main.py
 
 ---
 
+## 4. Visualizar o Relatório
+
+A cada execução, o script gera automaticamente:
+
+* a pasta `graficos/`, com todos os gráficos em `.png`;
+* o arquivo `relatorio_gerado.md`, contendo todo o texto, tabelas e gráficos organizados em sequência, na ordem em que o pipeline foi executado.
+
+Para visualizar o relatório completo (texto + tabelas + gráficos juntos, como um relatório único), abra o arquivo `relatorio_gerado.md` no VSCode e use o **Preview de Markdown**.
+
+---
+
 # Resultados Esperados
 
-Durante a execução serão gerados automaticamente:
+Durante a execução serão gerados automaticamente, e registrados em `relatorio_gerado.md`:
 
-* estatísticas descritivas;
-* gráficos da EDA;
-* histogramas;
-* boxplots;
-* heatmap;
-* matrizes de confusão;
-* relatórios de classificação;
-* comparação entre os modelos.
+* estatísticas descritivas (shape, tipos, describe, nulos, duplicados);
+* gráficos da EDA (histogramas, boxplots, distribuição do alvo, heatmap de correlação);
+* justificativa textual do tratamento de nulos e outliers;
+* tabelas comparativas de KNN e Árvore de Decisão (Accuracy, Precision, Recall, F1, em treino e teste);
+* diagnóstico de overfitting (diferença treino x teste);
+* classification report e matrizes de confusão (gráficas) para o melhor KNN e a melhor Árvore;
+* veredito de negócios, com os Falsos Positivos/Falsos Negativos e Recall reais de cada modelo, indicando qual deve ir para produção.
 
 ---
 
 # Resumo Executivo
 
-Após a limpeza da base, criação da nova variável, balanceamento das classes e treinamento dos modelos, foi realizada uma comparação entre KNN e Árvore de Decisão utilizando diferentes configurações de hiperparâmetros.
 
-O modelo escolhido para produção será aquele que apresentar melhor equilíbrio entre Precision, Recall e F1-Score, evitando overfitting e apresentando maior capacidade de generalização.
+Após a limpeza da base, criação da variável `comprometimento_renda`, balanceamento das classes via SMOTE e
+treinamento dos modelos, foi realizada uma comparação entre KNN (K = 3, 5, 7, 9) e Árvore de Decisão
+(profundidade = 3, 5, 7, None).
 
-No contexto bancário, será dada maior importância à redução dos Falsos Negativos, pois aprovar crédito para clientes inadimplentes gera impacto financeiro significativamente maior do que rejeitar alguns clientes que seriam bons pagadores.
+* A base apresentou desbalanceamento entre as classes de `loan_status` (ver gráfico `03_target_distribuicao.png`
+  em `relatorio_gerado.md`), o que justificou o uso de SMOTE aplicado exclusivamente no conjunto de treino.
+* [Descreva aqui 1-2 insights concretos da EDA: ex. quais variáveis mais se correlacionaram com `loan_status`
+  no heatmap, quais colunas concentraram mais outliers nos boxplots.]
+* O modelo recomendado para produção foi **KNN**, com Recall da classe 1 de
+  **0.68** e **458** Falsos Negativos no conjunto de teste, contra **463** Falsos Negativos do
+  outro modelo.
+* A escolha priorizou o Recall da classe 1 (inadimplentes) em vez da Accuracy geral, pois no contexto bancário
+  aprovar crédito para um cliente inadimplente (Falso Negativo) gera impacto financeiro significativamente
+  maior do que negar crédito a um bom pagador (Falso Positivo).
 
 ---
 

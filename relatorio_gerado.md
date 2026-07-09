@@ -235,8 +235,12 @@ No contexto de Risco de Credito, os erros possuem pesos financeiros drasticament
 - **Falso Positivo:** Classificar um bom pagador como risco faz o banco perder a margem de juros da operacao.
 - **Falso Negativo:** Classificar um mau pagador como confiavel resulta na perda total do montante emprestado.
 
+No teste, o **KNN** gerou **458 Falsos Negativos** e **255 Falsos Positivos** (Recall classe 1 = 0.68).
+
+A **Arvore de Decisao** gerou **463 Falsos Negativos** e **157 Falsos Positivos** (Recall classe 1 = 0.67).
+
 Portanto, o foco de negocios deve ser minimizar os Falsos Negativos, ou seja, maximizar a metrica **RECALL da classe 1** (Inadimplentes).
 
-Com base nas matrizes de confusao geradas, recomenda-se colocar em producao o modelo que obteve o maior Recall para a classe 1, pois e a estrategia mais segura para proteger o patrimonio da instituicao financeira.
+Com base nesses numeros, recomenda-se colocar em producao o modelo **KNN**, que apresentou o maior Recall para a classe 1 (0.68), ainda que isso possa custar uma leve queda na precisao geral, pois e a estrategia mais segura para proteger o patrimonio da instituicao financeira.
 **[OK]** Relatorio gerado com sucesso! Verifique o arquivo 'relatorio_gerado.md'.
 

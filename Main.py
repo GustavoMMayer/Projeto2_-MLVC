@@ -1,9 +1,9 @@
-import functions4 as fn
+import functions as fn
 
 # ==========================================================
 # CONFIGURACOES
 # ==========================================================
-ARQUIVO_CSV = r"D:\SCTEC\Segundo trabalho\Projeto2_ MLVC\data\credit_risk_dataset.csv"
+ARQUIVO_CSV = r"data\credit_risk_dataset.csv"
 
 TARGET = "loan_status"
 
