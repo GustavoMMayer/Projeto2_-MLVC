@@ -326,3 +326,5 @@ Este projeto demonstra todas as etapas fundamentais de um pipeline de Machine Le
 Além da construção dos modelos preditivos, foram adotadas boas práticas de Ciência de Dados, incluindo tratamento adequado dos dados, prevenção de Data Leakage, balanceamento das classes, ajuste de hiperparâmetros e avaliação criteriosa dos modelos.
 
 A decisão final não foi baseada apenas na acurácia, mas também no impacto financeiro dos erros de classificação, aproximando a solução de um cenário real de tomada de decisão em instituições financeiras.
+
+**[Clique aqui para abrir e ler o Relatório Gerado Completo](./relatorio_gerado.md)**
