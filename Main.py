@@ -1,10 +1,9 @@
-import functions as fn
+import functions4 as fn
 
 # ==========================================================
-# CONFIGURAÇÕES
+# CONFIGURACOES
 # ==========================================================
-
-ARQUIVO_CSV = "data/credit_risk.csv"
+ARQUIVO_CSV = r"D:\SCTEC\Segundo trabalho\Projeto2_ MLVC\data\credit_risk_dataset.csv"
 
 TARGET = "loan_status"
 
@@ -28,12 +27,12 @@ def main():
     fn.analise_exploratoria(df, TARGET)
 
     # Limpeza
-    df = fn.tratar_dados(df)
+    df = fn.tratar_dados(df, TARGET)
 
     # Engenharia
     df = fn.feature_engineering(df)
 
-    # Preparação
+    # Preparacao
     dados = fn.preparar_dados(
         df=df,
         target=TARGET,
@@ -53,7 +52,7 @@ def main():
         TREE_DEPTHS
     )
 
-    # Comparação
+    # Comparacao
     melhor_modelo = fn.comparar_modelos(
         resultado_knn,
         resultado_arvore
@@ -68,7 +67,7 @@ def main():
         resultado_arvore["resultado"]
     )
 
-    # Relatório final
+    # Relatorio final
     fn.relatorio_final(
         melhor_modelo,
         dados
