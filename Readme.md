@@ -308,8 +308,6 @@ treinamento dos modelos, foi realizada uma comparação entre KNN (K = 3, 5, 7, 
 
 * A base apresentou desbalanceamento entre as classes de `loan_status` (ver gráfico `03_target_distribuicao.png`
   em `relatorio_gerado.md`), o que justificou o uso de SMOTE aplicado exclusivamente no conjunto de treino.
-* [Descreva aqui 1-2 insights concretos da EDA: ex. quais variáveis mais se correlacionaram com `loan_status`
-  no heatmap, quais colunas concentraram mais outliers nos boxplots.]
 * O modelo recomendado para produção foi **KNN**, com Recall da classe 1 de
   **0.68** e **458** Falsos Negativos no conjunto de teste, contra **463** Falsos Negativos do
   outro modelo.
